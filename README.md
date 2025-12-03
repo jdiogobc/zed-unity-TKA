@@ -41,7 +41,7 @@ To develop applications in Unity with your ZED, you'll need the following things
   - Click the "+" button at the top left and select "Add package from git URL..."
   - Copy this URL into the field and hit Add:
 ```
-https://github.com/stereolabs/zed-unity.git?path=/ZEDCamera/Assets
+https://github.com/jdiogobc/zed-unity-TKA.git?path=/ZEDCamera/Assets
 ```
   - Wait for the package to install (it can take some time, depending on your connection)
 - Install the samples you want to try out/use through the Package Manager
@@ -87,3 +87,4 @@ Got a problem you just can't seem to solve? Got a project you want to share? Che
 You found a bug / a flaw in our plugin ? Please check that it is not [already reported](https://github.com/stereolabs/zed-unity/issues), and open an issue if necessary. You can also reach out to us on the community forums for any question or feedback !
 
 *By the way, we also have a special place in our hearts for PR senders.*
+
