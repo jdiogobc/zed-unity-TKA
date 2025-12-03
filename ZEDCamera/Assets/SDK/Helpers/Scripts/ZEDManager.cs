@@ -2867,13 +2867,28 @@ public class ZEDManager : MonoBehaviour
             return;
         }
         // Then update all modules
+
+        //enforce FPS if needed
+        if (inputType == sl.INPUT_TYPE.INPUT_TYPE_SVO && ForceFPSBool)
+        {
+            svoAccumulated += Time.deltaTime;
+            if (svoAccumulated < 1f/ForceFPSValue)
+            {
+                return;
+            }
+            if (svoAccumulated > .1f)
+            {
+            }
+            svoAccumulated -= 1f/ForceFPSValue;
+        }
+
         UpdateImages(); //Image is updated first so we have its timestamp for latency compensation.
 
         UpdateHmdPose(); //Store the HMD's pose at the current timestamp.
         UpdateTracking(); //Apply position/rotation changes to zedRigRoot.
-        UpdateObjectDetection(); //Update od if activated
-        UpdateBodiesTracking(); // Update bt if actived
-        UpdateMapping(); //Update mapping if activated
+        if (objectDetectionRunning) UpdateObjectDetection();
+        if (bodyTrackingRunning) UpdateBodiesTracking();
+        if (spatialMapping != null && spatialMapping.IsRunning()) UpdateMapping();
 
         /// If in Unity Editor, update the ZEDManager status list
 #if UNITY_EDITOR
