@@ -58,8 +58,8 @@ public class ZEDManager : MonoBehaviour
     /// at C:/ProgramData/stereolabs/SL_Unity_wrapper.txt. This helps find issues that may occur within
     /// the protected .dll, but can decrease performance.
     /// </summary>
-    private bool wrapperVerbose = true;
-
+    [SerializeField]
+    private bool wrapperVerbose = false;
     /// <summary>
     /// Current instance of the ZED Camera, which handles calls to the Unity wrapper .dll.
     /// </summary>
@@ -116,6 +116,21 @@ public class ZEDManager : MonoBehaviour
     [HideInInspector]
     public string svoInputFileName = "";
 
+    private float svoAccumulated = 0;
+
+    /// <summary>
+    /// Forces the playback FPS when in real-time mode.
+    /// </summary>
+    [HideInInspector]
+    public bool ForceFPSBool = false;
+
+    /// <summary>
+    /// Target FPS to use when forcing FPS in real-time mode.
+    /// </summary>
+    [HideInInspector]
+    public float ForceFPSValue = 30;
+
+
     /// <summary>
     /// Optional opencv calib file
     /// </summary>
@@ -165,7 +180,7 @@ public class ZEDManager : MonoBehaviour
     /// SVO loop back option
     /// </summary>
     [HideInInspector]
-    public bool svoRealTimeMode = false;
+    public bool svoRealTimeMode = true;
 
     /// <summary>
     /// Current frame being read from the SVO. Doesn't apply when recording.
@@ -1869,8 +1884,8 @@ public class ZEDManager : MonoBehaviour
                 SubsystemManager.GetSubsystems<XRInputSubsystem>(subsystems);
                 for (int i = 0; i < subsystems.Count; i++)
                 {
-                     subsystems[i].TrySetTrackingOriginMode(TrackingOriginModeFlags.Device);
-                     subsystems[i].TryRecenter();
+                    subsystems[i].TrySetTrackingOriginMode(TrackingOriginModeFlags.Device);
+                    subsystems[i].TryRecenter();
                 }
             }
             else
@@ -2089,7 +2104,7 @@ public class ZEDManager : MonoBehaviour
         initParameters.asyncGrabCameraRecovery = asyncGrabCameraRecovery;
         initParameters.grabComputeCappingFPS = grabComputeCappingFPS;
         initParameters.enableImageValidityCheck = enableImageValidityCheck;
-	    initParameters.sdkVerbose = wrapperVerbose ? 1 : 0;
+        initParameters.sdkVerbose = wrapperVerbose ? 1 : 0;
 
         //Check if this rig is a stereo rig. Will set isStereoRig accordingly.
         CheckStereoMode();
@@ -2878,6 +2893,8 @@ public class ZEDManager : MonoBehaviour
             }
             if (svoAccumulated > .1f)
             {
+                svoAccumulated = 0;
+                return;
             }
             svoAccumulated -= 1f/ForceFPSValue;
         }
