@@ -1767,7 +1767,7 @@ public class ZEDManager : MonoBehaviour
             return ZEDLayers.arlayer;
         }
     }
-    [SerializeField]
+    [field: SerializeField]
     [HideInInspector]
     //private int arlayer = 30;
 
